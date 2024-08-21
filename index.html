@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minecraft Personality Quiz</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .fake-banner {
+        width: 100%;
+        background-color: #fca503;
+        padding: 10px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .ad {
+        width: 80%;
+        height: 400px;
+        margin-bottom: 20px;
+        background-color: gray;
+        background-image: url("https://images.squarespace-cdn.com/content/v1/54ec2161e4b01dbc251cbdae/8109841b-663b-476b-beee-e72bd234ee95/best-ideas-For-Successful-Banner-Advertising-30.jpg");
+        background-size: cover;
+        background-position: center;
+      }
+
+      .quiz-container {
+        margin-bottom: 20px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .question {
+        margin-bottom: 20px;
+      }
+
+      .option {
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .option input[type="radio"] {
+        display: none;
+      }
+
+      .option label {
+        cursor: pointer;
+        display: block;
+      }
+
+      .option.selected {
+        background-color: #b3e5fc;
+      }
+
+      .btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        display: block;
+        margin: 0 auto;
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: #ffffff;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      .modal-content img {
+        width: 200px;
+        margin-top: 20px;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="fake-banner">Get Your Minecraft Personality Quiz!</div>
+
+    <div class="ad"></div>
+
+    <div class="quiz-container" id="quizContainer">
+      <!-- Questions will be generated here -->
+    </div>
+
+    <button class="btn" onclick="showResult()">Get Your Result!</button>
+
+    <!-- Modal -->
+    <div id="resultModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>You are... a Minion!</h2>
+        <p>You're short</p>
+        <img
+          src="data:image/jpeg;base64,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"
+          alt="Minion"
+        />
+      </div>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          text: "1. What is your favorite biome?",
+          options: ["Forest", "Desert", "Mountains"],
+        },
+        {
+          text: "2. What do you enjoy doing most in Minecraft?",
+          options: ["Mining", "Building", "Fighting Mobs"],
+        },
+        {
+          text: "3. What's your favorite block?",
+          options: ["Cobblestone", "Diamond Ore", "Redstone"],
+        },
+        {
+          text: "4. What's your preferred game mode?",
+          options: ["Survival", "Creative", "Hardcore"],
+        },
+        {
+          text: "5. Which mob do you like best?",
+          options: ["Creeper", "Zombie", "Skeleton"],
+        },
+        {
+          text: "6. What's your go-to tool?",
+          options: ["Pickaxe", "Axe", "Shovel"],
+        },
+        {
+          text: "7. What's your preferred building material?",
+          options: ["Wood", "Stone", "Brick"],
+        },
+        {
+          text: "8. What do you like to farm?",
+          options: ["Wheat", "Carrots", "Potatoes"],
+        },
+        {
+          text: "9. What is your favorite type of wood?",
+          options: ["Oak", "Birch", "Spruce"],
+        },
+        {
+          text: "10. What's your favorite weapon?",
+          options: ["Sword", "Bow and Arrow", "Potion"],
+        },
+        {
+          text: "11. Which dimension do you prefer?",
+          options: ["Overworld", "Nether", "End"],
+        },
+        {
+          text: "12. What’s your preferred mode of transportation?",
+          options: ["Horse", "Minecart", "Elytra"],
+        },
+        {
+          text: "13. What’s your favorite thing to craft?",
+          options: ["Tools", "Armor", "Redstone Contraptions"],
+        },
+        {
+          text: "14. Which boss do you like best?",
+          options: ["Ender Dragon", "Wither", "Elder Guardian"],
+        },
+        {
+          text: "15. What's your preferred light source?",
+          options: ["Torch", "Lantern", "Glowstone"],
+        },
+        {
+          text: "16. What's your favorite Minecraft event?",
+          options: ["Village Raid", "Pillager Patrol", "Zombie Siege"],
+        },
+        {
+          text: "17. What’s your favorite Minecraft enchantment?",
+          options: ["Sharpness", "Efficiency", "Fortune"],
+        },
+        {
+          text: "18. Which Minecraft server game mode do you prefer?",
+          options: ["Survival Games", "Skyblock", "Bed Wars"],
+        },
+        {
+          text: "19. What's your preferred weapon?",
+          options: ["Diamond Sword", "Trident", "Crossbow"],
+        },
+        {
+          text: "20. What's your favorite mob to tame?",
+          options: ["Wolf", "Cat", "Parrot"],
+        },
+      ];
+
+      function generateQuiz() {
+        const quizContainer = document.getElementById("quizContainer");
+        questions.forEach((question, index) => {
+          const questionDiv = document.createElement("div");
+          questionDiv.className = "question";
+
+          const questionText = document.createElement("p");
+          questionText.textContent = question.text;
+          questionDiv.appendChild(questionText);
+
+          question.options.forEach((option, i) => {
+            const optionDiv = document.createElement("div");
+            optionDiv.className = "option";
+
+            const optionInput = document.createElement("input");
+            optionInput.type = "radio";
+            optionInput.name = `q${index + 1}`;
+            optionInput.id = `q${index + 1}${String.fromCharCode(97 + i)}`;
+            optionDiv.appendChild(optionInput);
+
+            const optionLabel = document.createElement("label");
+            optionLabel.htmlFor = optionInput.id;
+            optionLabel.textContent = option;
+            optionDiv.appendChild(optionLabel);
+
+            optionDiv.addEventListener("click", function () {
+              const siblingOptions =
+                optionDiv.parentNode.querySelectorAll(".option");
+              siblingOptions.forEach((opt) => opt.classList.remove("selected"));
+              optionDiv.classList.add("selected");
+              optionInput.checked = true;
+            });
+
+            questionDiv.appendChild(optionDiv);
+          });
+
+          quizContainer.appendChild(questionDiv);
+        });
+      }
+
+      function showResult() {
+        const quizContainer = document.getElementById("quizContainer");
+        const questions = quizContainer.querySelectorAll(".question");
+        let allAnswered = true;
+
+        questions.forEach((question) => {
+          const checked = question.querySelector('input[type="radio"]:checked');
+          if (!checked) {
+            allAnswered = false;
+          }
+        });
+
+        if (allAnswered) {
+          document.getElementById("resultModal").style.display = "flex";
+        } else {
+          alert("Please answer all the questions!");
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("resultModal").style.display = "none";
+      }
+
+      window.onload = generateQuiz;
+    </script>
+  </body>
+</html>
